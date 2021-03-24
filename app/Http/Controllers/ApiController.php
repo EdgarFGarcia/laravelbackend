@@ -12,7 +12,8 @@ use Validator, MainRepository, Mail, DB, Storage;
 class ApiController extends Controller
 {
     //
-    public function sendinvitation($email, $hasheddata){
+    public function sendinvitation($email, $id){
+        $hasheddata = Crypt::encryptString($id);
         $mail = Mail::to($email)->send(new SendInvitation($hasheddata));
     }
 

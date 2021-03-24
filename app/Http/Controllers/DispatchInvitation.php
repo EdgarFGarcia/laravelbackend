@@ -37,10 +37,10 @@ class DispatchInvitation extends Controller
 
         MainRepository::updateuseraddhash($user->id, $hasheddata);
 
-        Mail::to($request->email)->send(new mailservice($hasheddata));
+        // Mail::to($request->email)->send(new mailservice($hasheddata));
 
-        // $sendemail = new SendInvitation($request->email, $hasheddata);
-        // dispatch($sendemail);
+        $sendemail = new SendInvitation($request->email, $user->id);
+        dispatch($sendemail);
         return response()->json([
             'response'      => true,
             'message'       => "Sending Invitation Successful"

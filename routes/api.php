@@ -22,7 +22,6 @@ use App\Http\Controllers\ApiController;
 
 Route::post('/sendinvitation', [DispatchInvitation::class, 'dispatchinvitation']);
 Route::get('/getusers', [ApiController::class, 'getusers']);
-// Route::put('/edituserinformation/{hash?}', [ApiController::class, 'edituserinformation']);
 Route::get('/edituser/{id}', [ApiController::class, 'edituser']);
 Route::post('/editinformation', [ApiController::class, 'editinformation']);
 Route::get('/sendwelcomemessage', [DispatchInvitation::class, 'sendwelcomemessage']);

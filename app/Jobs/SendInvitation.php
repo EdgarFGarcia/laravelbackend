@@ -15,18 +15,18 @@ class SendInvitation implements ShouldQueue
 
     protected $email;
 
-    protected $hasheddata;
+    protected $id;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($email, $hasheddata)
+    public function __construct($email, $id)
     {
         //
         $this->email = $email;
-        $this->hasheddata = $hasheddata;
+        $this->id = $id;
     }
 
     /**
@@ -37,6 +37,6 @@ class SendInvitation implements ShouldQueue
     public function handle()
     {
         //
-        app('App\Http\Controllers\ApiController')->sendinvitation($this->email, $this->hasheddata);
+        app('App\Http\Controllers\ApiController')->sendinvitation($this->email, $this->id);
     }
 }
