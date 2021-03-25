@@ -25,7 +25,6 @@ class ApiController extends Controller
             $toshow[] = [
                 'id'            => $out->id,
                 'name'          => $out->lastname . ', ' . $out->firstname,
-                // 'image256'      => storage_path('profile_images/' . $out->image256),
                 'image256'      => Storage::disk('public')->get('/profile_images').$out->image256,
                 'email'         => $out->email,
                 'is_signed_up'  => $out->firstname > '' ? "YES" : "NO"
@@ -37,44 +36,45 @@ class ApiController extends Controller
             'data'          => $toshow
         ], 200);
 
-        // return response()->json([
-        //     'response'      => true,
-        //     'data'          => User::get([
-        //         'id',
-        //         DB::raw("CONCAT(lastname, ', ', firstname) as name"),
-        //         'image256',
-        //         'email',
-        //         DB::raw('(CASE WHEN firstname IS NULL THEN "NO" ELSE "YES" END) AS is_signed_up')
-        //     ])
-        // ], 200);
     }
 
     public function edituser($id = null, Request $request){
         if($id > ''){
-
-            // $validate = Validator::make($request->all(), [
-            //     'firstname'     => 'required|string',
-            //     'lastname'      => 'required|string',
-            //     'profile_image' => 'required, mimes:jpeg,jpg,gif,png'
-            // ]);
-
             $id = Crypt::decryptString($id);
-            return view('additionaldata', ['data' => $id]);
-            // $datatoedit = MainRepository::userlookupviaid($id);
-            // return $updateUser = MainRepository::updateuser($request, $datatoedit->id);
+            $user = User::where('id', $id)->whereNotNull('')->first();
+            // return view('additionaldata', ['data' => $id]);
+            if($user){
+                return response()->json([
+                    'response'      => true,
+                    'message'       => "Valid"
+                ], 200);
+            }
+            return response()->json([
+                'response'      => false,
+                'message'       => "Invalid"
+            ], 422);
         }
     }
 
     public function editinformation(Request $request){
         $updateUser = MainRepository::updateuser($request);
-        // $getuserinfo = User::where('id', $request->id)->first();
         if($updateUser){
-            return view('/welcome', ['data' => $request->id]);
+            return response()->json([
+                'response'      => true,
+                'message'       => "Success"
+            ], 200);
         }
+        return response()->json([
+            'response'          => false,
+            'message'           => "Failed"
+        ], 422);
+        // $getuserinfo = User::where('id', $request->id)->first();
+        // if($updateUser){
+        //     return view('/welcome', ['data' => $request->id]);
+        // }
     }
 
     public function sendwelcome($email){
-        sleep(500);
         Mail::to($email)->send(new WelcomeEmail);
     }
 
